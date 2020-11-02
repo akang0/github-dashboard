@@ -2,7 +2,9 @@
 
 # Requirements
 
-- cube-js: https://github.com/cube-js/cube.js#getting-started
+- [nodejs](https://nodejs.org/en/download/package-manager)
+- [cube-js](https://github.com/cube-js/cube.js#getting-started)
+- [github-data-mining](https://github.com/mikeshng/github-data-mining)
 
 # Set up
 
@@ -11,5 +13,7 @@
 
 # Start
 
-- npm install
-- npm run dev
+```Shell
+$ npm install
+$ npm run dev
+```
