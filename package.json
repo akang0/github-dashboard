@@ -8,5 +8,9 @@
   "devDependencies": {
     "@cubejs-backend/mongobi-driver": "^0.23.0",
     "@cubejs-backend/server": "^0.23.2"
+  },
+  "dependencies": {
+    "@cubejs-client/core": "^0.23.6",
+    "@cubejs-client/react": "^0.23.6"
   }
 }
