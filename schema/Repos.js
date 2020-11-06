@@ -8,7 +8,7 @@ cube(`Repos`, {
   measures: {
     count: {
       type: `count`,
-      drillMembers: [name]
+      drillMembers: [id, name]
     }
   },
   
@@ -19,6 +19,7 @@ cube(`Repos`, {
       primaryKey: true,
       shown: true
     },
+    
     name: {
       sql: `name`,
       type: `string`
@@ -26,6 +27,11 @@ cube(`Repos`, {
     
     organization: {
       sql: `organization`,
+      type: `string`
+    },
+    
+    type: {
+      sql: `type`,
       type: `string`
     }
   }
