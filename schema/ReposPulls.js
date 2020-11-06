@@ -11,7 +11,7 @@ cube(`ReposPulls`, {
   measures: {
     count: {
       type: `count`,
-      drillMembers: [createdAt, name, repoName]
+      drillMembers: [createdAt, id, name, repoName, title]
     }
   },
   
@@ -22,7 +22,6 @@ cube(`ReposPulls`, {
       primaryKey: true,
       shown: true
     },
-
     closedAt: {
       sql: `closed_at`,
       type: `string`
@@ -31,6 +30,12 @@ cube(`ReposPulls`, {
     createdAt: {
       sql: `created_at`,
       type: `string`
+    },
+    
+    id: {
+      sql: `id`,
+      type: `number`,
+      primaryKey: true
     },
     
     name: {
@@ -45,6 +50,11 @@ cube(`ReposPulls`, {
     
     state: {
       sql: `state`,
+      type: `string`
+    },
+    
+    title: {
+      sql: `title`,
       type: `string`
     }
   }
