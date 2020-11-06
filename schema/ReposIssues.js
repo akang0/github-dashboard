@@ -3,10 +3,9 @@ cube(`ReposIssues`, {
   
   joins: {
     Repos: {
-      relationship: `belongsTo`,
-      sql: `${ReposIssues}.repo_id = ${Repos}.id`
+      sql: `${CUBE}.repo_id = ${Repos}.id`,
+      relationship: `belongsTo`
     }
-    
   },
   
   measures: {
