@@ -2,80 +2,64 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useCubeQuery } from '@cubejs-client/react';
 import { Spin, Row, Col, Statistic, Table } from 'antd';
-import { Line, Bar, Pie } from 'react-chartjs-2';
-const COLORS_SERIES = ['#FF6492', '#141446', '#7A77FF'];
+import { CartesianGrid, PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, BarChart, Bar, LineChart, Line } from 'recharts';
+
+const CartesianChart = ({
+  resultSet,
+  children,
+  ChartComponent
+}) => <ResponsiveContainer width="100%" height={350}>
+    <ChartComponent data={resultSet.chartPivot()}>
+      <XAxis dataKey="x" />
+      <YAxis />
+      <CartesianGrid />
+      {children}
+      <Legend />
+      <Tooltip />
+    </ChartComponent>
+  </ResponsiveContainer>;
+
+const colors = ['#FF6492', '#141446', '#7A77FF'];
+
+const stackedChartData = resultSet => {
+  const data = resultSet.pivot().map(({
+    xValues,
+    yValuesArray
+  }) => yValuesArray.map(([yValues, m]) => ({
+    x: resultSet.axisValuesString(xValues, ', '),
+    color: resultSet.axisValuesString(yValues, ', '),
+    measure: m && Number.parseFloat(m)
+  }))).reduce((a, b) => a.concat(b), []);
+  return data;
+};
+
 const TypeToChartComponent = {
   line: ({
     resultSet
-  }) => {
-    const data = {
-      labels: resultSet.categories().map(c => c.category),
-      datasets: resultSet.series().map((s, index) => ({
-        label: s.title,
-        data: s.series.map(r => r.value),
-        borderColor: COLORS_SERIES[index],
-        fill: false
-      }))
-    };
-    const options = {};
-    return <Line data={data} options={options} />;
-  },
+  }) => <CartesianChart resultSet={resultSet} ChartComponent={LineChart}>
+      {resultSet.seriesNames().map((series, i) => <Line key={series.key} stackId="a" dataKey={series.key} name={series.title} stroke={colors[i]} />)}
+    </CartesianChart>,
   bar: ({
     resultSet
-  }) => {
-    const data = {
-      labels: resultSet.categories().map(c => c.category),
-      datasets: resultSet.series().map((s, index) => ({
-        label: s.title,
-        data: s.series.map(r => r.value),
-        backgroundColor: COLORS_SERIES[index],
-        fill: false
-      }))
-    };
-    const options = {
-      scales: {
-        xAxes: [{
-          stacked: true
-        }]
-      }
-    };
-    return <Bar data={data} options={options} />;
-  },
+  }) => <CartesianChart resultSet={resultSet} ChartComponent={BarChart}>
+      {resultSet.seriesNames().map((series, i) => <Bar key={series.key} stackId="a" dataKey={series.key} name={series.title} fill={colors[i]} />)}
+    </CartesianChart>,
   area: ({
     resultSet
-  }) => {
-    const data = {
-      labels: resultSet.categories().map(c => c.category),
-      datasets: resultSet.series().map((s, index) => ({
-        label: s.title,
-        data: s.series.map(r => r.value),
-        backgroundColor: COLORS_SERIES[index]
-      }))
-    };
-    const options = {
-      scales: {
-        yAxes: [{
-          stacked: true
-        }]
-      }
-    };
-    return <Line data={data} options={options} />;
-  },
+  }) => <CartesianChart resultSet={resultSet} ChartComponent={AreaChart}>
+      {resultSet.seriesNames().map((series, i) => <Area key={series.key} stackId="a" dataKey={series.key} name={series.title} stroke={colors[i]} fill={colors[i]} />)}
+    </CartesianChart>,
   pie: ({
     resultSet
-  }) => {
-    const data = {
-      labels: resultSet.categories().map(c => c.category),
-      datasets: resultSet.series().map(s => ({
-        label: s.title,
-        data: s.series.map(r => r.value),
-        backgroundColor: COLORS_SERIES,
-        hoverBackgroundColor: COLORS_SERIES
-      }))
-    };
-    const options = {};
-    return <Pie data={data} options={options} />;
-  },
+  }) => <ResponsiveContainer width="100%" height={350}>
+      <PieChart>
+        <Pie isAnimationActive={false} data={resultSet.chartPivot()} nameKey="x" dataKey={resultSet.seriesNames()[0].key} fill="#8884d8">
+          {resultSet.chartPivot().map((e, index) => <Cell key={index} fill={colors[index % colors.length]} />)}
+        </Pie>
+        <Legend />
+        <Tooltip />
+      </PieChart>
+    </ResponsiveContainer>,
   number: ({
     resultSet
   }) => <Row type="flex" justify="center" align="middle" style={{
@@ -98,19 +82,23 @@ const TypeToMemoChartComponent = Object.keys(TypeToChartComponent).map(key => ({
 
 const renderChart = Component => ({
   resultSet,
-  error
-}) => resultSet && <Component resultSet={resultSet} /> || error && error.toString() || <Spin />;
+  error,
+  pivotConfig
+}) => resultSet && <Component resultSet={resultSet} pivotConfig={pivotConfig} /> || error && error.toString() || <Spin />;
 
 const ChartRenderer = ({
   vizState
 }) => {
   const {
     query,
-    chartType
+    chartType,
+    pivotConfig
   } = vizState;
   const component = TypeToMemoChartComponent[chartType];
   const renderProps = useCubeQuery(query);
-  return component && renderChart(component)(renderProps);
+  return component && renderChart(component)({ ...renderProps,
+    pivotConfig
+  });
 };
 
 ChartRenderer.propTypes = {

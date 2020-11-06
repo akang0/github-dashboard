@@ -2,18 +2,16 @@ import './body.css';
 import 'antd/dist/antd.css';
 import React from 'react';
 import '@ant-design/compatible';
+import { ApolloProvider } from '@apollo/react-hooks';
 import { Layout } from 'antd';
 import cubejs from '@cubejs-client/core';
 import { CubeProvider } from '@cubejs-client/react';
+import client from './graphql/client';
 import Header from './components/Header';
-import WebSocketTransport from '@cubejs-client/ws-transport';
 const API_URL = "http://localhost:4000";
 const CUBEJS_TOKEN = "";
-const cubejsApi = cubejs({
-  transport: new WebSocketTransport({
-    authorization: CUBEJS_TOKEN,
-    apiUrl: API_URL.replace('http', 'ws')
-  })
+const cubejsApi = cubejs(CUBEJS_TOKEN, {
+  apiUrl: `${API_URL}/cubejs-api/v1`
 });
 
 const AppLayout = ({
@@ -28,7 +26,9 @@ const AppLayout = ({
 const App = ({
   children
 }) => <CubeProvider cubejsApi={cubejsApi}>
-    <AppLayout>{children}</AppLayout>
+    <ApolloProvider client={client}>
+      <AppLayout>{children}</AppLayout>
+    </ApolloProvider>
   </CubeProvider>;
 
 export default App;

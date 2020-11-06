@@ -25,6 +25,9 @@ const Header = ({
     <Menu theme="dark" mode="horizontal" selectedKeys={[location.pathname]} style={{
     lineHeight: '64px'
   }}>
+      <Menu.Item key="/explore">
+        <Link to="/explore">Explore</Link>
+      </Menu.Item>
       <Menu.Item key="/">
         <Link to="/">Dashboard</Link>
       </Menu.Item>
