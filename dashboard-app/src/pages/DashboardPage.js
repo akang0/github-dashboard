@@ -9,20 +9,53 @@ const DashboardItems = [{
   name: "Pull Request by Repository",
   vizState: {
     query: {
-      "measures": [
-        "ReposPulls.count"
-      ],
+      "measures": ["ReposPulls.count"],
       "timeDimensions": [],
       "order": {
         "ReposPulls.count": "desc"
       },
-      "dimensions": [
-        "Repos.name",
-        "Repos.type",
-        "Repos.avgPullAge"
-      ]
+      "dimensions": ["Repos.name", "Repos.type", "Repos.avgPullAge"]
     },
     chartType: "table"
+  }
+}, {
+  id: 1,
+  name: "Total Issues Created Trend",
+  vizState: {
+    query: {
+      "order": {
+        "ReposIssues.createdat": "asc"
+      },
+      "measures": ["ReposIssues.count"],
+      "timeDimensions": [],
+      "filters": [{
+        "dimension": "Repos.name",
+        "operator": "equals",
+        "values": ["backlog"]
+      }],
+      "dimensions": ["ReposIssues.createdat"]
+    },
+    chartType: "line"
+  }
+}, {
+  id: 2,
+  name: "Repository Types",
+  vizState: {
+    query: {
+      "measures": [
+        "Repos.count"
+      ],
+      "timeDimensions": [],
+      "order": {
+        "Repos.count": "desc"
+      },
+      "dimensions": [
+        "Repos.type"
+      ],
+      "filters": []
+    }
+    ,
+    chartType: "pie"
   }
 }];
 
