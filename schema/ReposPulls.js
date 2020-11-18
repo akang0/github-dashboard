@@ -3,32 +3,26 @@ cube(`ReposPulls`, {
   
   joins: {
     Repos: {
-      relationship: `belongsTo`,
-      sql: `${ReposPulls}.repo_id = ${Repos}.id`
+      sql: `${CUBE}.\`repoId\` = ${Repos}.id`,
+      relationship: `belongsTo`
     }
   },
   
   measures: {
     count: {
       type: `count`,
-      drillMembers: [createdAt, id, name, repoName, title]
+      drillMembers: [createdat, id, reponame, title]
     }
   },
   
   dimensions: {
-    repoId: {
-      sql: `repo_id`,
-      type: `number`,
-      primaryKey: true,
-      shown: true
-    },
-    closedAt: {
-      sql: `closed_at`,
+    closedat: {
+      sql: `${CUBE}.\`closedAt\``,
       type: `string`
     },
     
-    createdAt: {
-      sql: `created_at`,
+    createdat: {
+      sql: `${CUBE}.\`createdAt\``,
       type: `string`
     },
     
@@ -38,13 +32,8 @@ cube(`ReposPulls`, {
       primaryKey: true
     },
     
-    name: {
-      sql: `name`,
-      type: `string`
-    },
-    
-    repoName: {
-      sql: `repo_name`,
+    reponame: {
+      sql: `${CUBE}.\`repoName\``,
       type: `string`
     },
     
