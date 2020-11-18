@@ -1,37 +1,20 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
-import { Layout, Menu } from 'antd';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 
-const Header = ({
-  location
-}) => <Layout.Header style={{
-  padding: '0 32px'
-}}>
-    <div style={{
-    float: 'left'
-  }}>
-      <h2 style={{
-      color: '#fff',
-      margin: 0,
-      marginRight: '1em',
-      display: 'inline',
-      width: 100,
-      lineHeight: '54px'
-    }}>
+const Header = () => <AppBar position="static">
+    <Toolbar variant="dense">
+      <IconButton edge="start" color="inherit" aria-label="menu">
+        <MenuIcon />
+      </IconButton>
+      <Typography variant="h6" color="inherit">
         My Dashboard
-      </h2>
-    </div>
-    <Menu theme="dark" mode="horizontal" selectedKeys={[location.pathname]} style={{
-    lineHeight: '64px'
-  }}>
-      <Menu.Item key="/explore">
-        <Link to="/explore">Explore</Link>
-      </Menu.Item>
-      <Menu.Item key="/">
-        <Link to="/">Dashboard</Link>
-      </Menu.Item>
-    </Menu>
-  </Layout.Header>;
+      </Typography>
+    </Toolbar>
+  </AppBar>;
 
 export default withRouter(Header);

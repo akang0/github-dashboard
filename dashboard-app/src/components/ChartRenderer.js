@@ -1,8 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useCubeQuery } from '@cubejs-client/react';
-import { Spin, Row, Col, Statistic, Table } from 'antd';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { CartesianGrid, PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, BarChart, Bar, LineChart, Line } from 'recharts';
+import Typography from "@material-ui/core/Typography";
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 const CartesianChart = ({
   resultSet,
@@ -62,17 +68,25 @@ const TypeToChartComponent = {
     </ResponsiveContainer>,
   number: ({
     resultSet
-  }) => <Row type="flex" justify="center" align="middle" style={{
-    height: '100%'
+  }) => <Typography variant="h4" style={{
+    textAlign: 'center'
   }}>
-      <Col>
-        {resultSet.seriesNames().map(s => <Statistic value={resultSet.totalRow()[s.key]} />)}
-      </Col>
-    </Row>,
+      {resultSet.seriesNames().map(s => resultSet.totalRow()[s.key])}
+    </Typography>,
   table: ({
-    resultSet,
-    pivotConfig
-  }) => <Table pagination={false} columns={resultSet.tableColumns(pivotConfig)} dataSource={resultSet.tablePivot(pivotConfig)} />
+    resultSet
+  }) => <Table aria-label="simple table">
+      <TableHead>
+        <TableRow>
+          {resultSet.tableColumns().map(c => <TableCell key={c.key}>{c.title}</TableCell>)}
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {resultSet.tablePivot().map((row, index) => <TableRow key={index}>
+            {resultSet.tableColumns().map(c => <TableCell key={c.key}>{row[c.key]}</TableCell>)}
+          </TableRow>)}
+      </TableBody>
+    </Table>
 };
 const TypeToMemoChartComponent = Object.keys(TypeToChartComponent).map(key => ({
   [key]: React.memo(TypeToChartComponent[key])
@@ -83,8 +97,8 @@ const TypeToMemoChartComponent = Object.keys(TypeToChartComponent).map(key => ({
 const renderChart = Component => ({
   resultSet,
   error,
-  pivotConfig
-}) => resultSet && <Component resultSet={resultSet} pivotConfig={pivotConfig} /> || error && error.toString() || <Spin />;
+  ...props
+}) => resultSet && <Component resultSet={resultSet} {...props} /> || error && error.toString() || <CircularProgress />;
 
 const ChartRenderer = ({
   vizState
@@ -92,12 +106,12 @@ const ChartRenderer = ({
   const {
     query,
     chartType,
-    pivotConfig
+    ...options
   } = vizState;
   const component = TypeToMemoChartComponent[chartType];
   const renderProps = useCubeQuery(query);
-  return component && renderChart(component)({ ...renderProps,
-    pivotConfig
+  return component && renderChart(component)({ ...options,
+    ...renderProps
   });
 };
 

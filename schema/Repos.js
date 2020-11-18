@@ -16,8 +16,7 @@ cube(`Repos`, {
     id: {
       sql: `id`,
       type: `number`,
-      primaryKey: true,
-      shown: true    
+      primaryKey: true
     },
     
     name: {
@@ -35,7 +34,7 @@ cube(`Repos`, {
       type: `string`
     },
     avgPullAge:{
-      sql:`avgPullAge`,
+      sql:`avgAge`,
       type: `number`
     }
   }
