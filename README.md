@@ -45,7 +45,7 @@ $ npm install
 $ npm run dev
 ```
 
-The cube.js playground will be running on http://localhost:3000
+The cube.js playground will be running on http://localhost:4000
 
 - To start the dashboard
 
@@ -54,4 +54,4 @@ $ cd dashboard-app
 $ npm start
 ```
 
-The dashboard will be running on http://localhost:4000
+The dashboard will be running on http://localhost:3000

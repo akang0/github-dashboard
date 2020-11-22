@@ -1,5 +1,5 @@
 cube(`ReposPulls`, {
-  sql: `SELECT * FROM github.repos_pulls`,
+  sql: `SELECT * FROM repos_pulls`,
   
   joins: {
     Repos: {

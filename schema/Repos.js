@@ -1,5 +1,5 @@
 cube(`Repos`, {
-  sql: `SELECT * FROM github.repos`,
+  sql: `SELECT * FROM repos`,
   
   joins: {
     
@@ -32,10 +32,6 @@ cube(`Repos`, {
     type: {
       sql: `type`,
       type: `string`
-    },
-    avgPullAge:{
-      sql:`avgAge`,
-      type: `number`
     }
   }
 });
