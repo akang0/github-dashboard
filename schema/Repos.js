@@ -35,7 +35,7 @@ cube(`Repos`, {
     },
     avgPullAge:{
       sql:`avgAge`,
-      type: `number`	  
+      type: `number`
     }
   }
 });
