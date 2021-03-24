@@ -11,7 +11,7 @@ cube(`ReposIssues`, {
   measures: {
     count: {
       type: `count`,
-      drillMembers: [createdat, id, reponame, title]
+      drillMembers: [createdat, createdby, id, reponame, title, milestone, isBug, squad, priority]
     },
     
     number: {
@@ -35,6 +35,11 @@ cube(`ReposIssues`, {
       sql: `${CUBE}.\`createdAt\``,
       type: `string`
     },
+
+    createdby: {
+      sql: `${CUBE}.\`createdBy\``,
+      type: `string`,
+    },
     
     id: {
       sql: `id`,
@@ -55,6 +60,31 @@ cube(`ReposIssues`, {
     title: {
       sql: `title`,
       type: `string`
-    }
+    },
+
+    milestone: {
+      sql: `${CUBE}.\`milestone\``,
+      type: `string`
+    },
+
+    isBug: {
+      sql: `${CUBE}.\`isBug\``,
+      type: `boolean`
+    },
+
+    squad: {
+      sql: `${CUBE}.\`squad\``,
+      type: `string`
+    },
+
+    priority: {
+      sql: `${CUBE}.\`priority\``,
+      type: `string`
+    },
+
+    QEcreated: {
+      sql: `${CUBE}.\`QEcreated\``,
+      type: `string`
+    },
   }
 });

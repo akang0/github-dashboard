@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useCubeQuery } from '@cubejs-client/react';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { CartesianGrid, PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, BarChart, Bar, LineChart, Line } from 'recharts';
+import { Brush, Area, AreaChart, CartesianGrid, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, LineChart, Line } from 'recharts';
 import Typography from "@material-ui/core/Typography";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -14,10 +14,10 @@ const CartesianChart = ({
   resultSet,
   children,
   ChartComponent
-}) => <ResponsiveContainer width="100%" height={350}>
+}) => <ResponsiveContainer width="100%" height={650}>
     <ChartComponent data={resultSet.chartPivot()}>
       <XAxis dataKey="x" />
-      <YAxis />
+      <YAxis type="number" domain={[0, 30]} tickCount={7} tickSize={5} minTickGap={1} />
       <CartesianGrid />
       {children}
       <Legend />
@@ -26,6 +26,8 @@ const CartesianChart = ({
   </ResponsiveContainer>;
 
 const colors = ['#FF6492', '#141446', '#7A77FF'];
+
+const getRandomColor = () => {return '#'+Math.floor(Math.random()*16777215).toString(16)}
 
 const stackedChartData = resultSet => {
   const data = resultSet.pivot().map(({
@@ -42,19 +44,16 @@ const stackedChartData = resultSet => {
 const TypeToChartComponent = {
   line: ({
     resultSet
-  }) => <CartesianChart resultSet={resultSet} ChartComponent={LineChart}>
-      {resultSet.seriesNames().map((series, i) => <Line key={series.key} stackId="a" dataKey={series.key} name={series.title} stroke={colors[i]} />)}
-    </CartesianChart>,
-  bar: ({
-    resultSet
-  }) => <CartesianChart resultSet={resultSet} ChartComponent={BarChart}>
-      {resultSet.seriesNames().map((series, i) => <Bar key={series.key} stackId="a" dataKey={series.key} name={series.title} fill={colors[i]} />)}
-    </CartesianChart>,
-  area: ({
-    resultSet
-  }) => <CartesianChart resultSet={resultSet} ChartComponent={AreaChart}>
-      {resultSet.seriesNames().map((series, i) => <Area key={series.key} stackId="a" dataKey={series.key} name={series.title} stroke={colors[i]} fill={colors[i]} />)}
-    </CartesianChart>,
+  }) => { 
+    return <CartesianChart resultSet={resultSet} ChartComponent={LineChart}>
+      {resultSet.seriesNames().map((series, i) => <Line key={series.key} stackId="a" dataKey={series.key} name={series.yValues[0]} stroke={getRandomColor()} />)}
+      <Brush dataKey="x">
+        <AreaChart>
+          <CartesianGrid />
+          <Area dataKey="price" stroke="#ff7300" fill="#ff7300" dot={false} />
+        </AreaChart>
+      </Brush>
+    </CartesianChart>},
   pie: ({
     resultSet
   }) => <ResponsiveContainer width="100%" height={350}>
